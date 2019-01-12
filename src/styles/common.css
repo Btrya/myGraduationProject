@@ -1,0 +1,85 @@
+.page{
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+.page-bottom{
+  padding-bottom: 48px;
+}
+
+.f-center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.f-space-between{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.f-vertical{
+  display: flex;
+  align-items: center;
+}
+
+.f-column{
+  display: flex;
+  flex-direction: column;
+}
+
+.f-space-around{
+  display: flex;
+  justify-content: space-around;
+}
+
+.f-wrap{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.f-flex-end{
+  display: flex;
+  align-items: flex-end;
+}
+
+.f-flex-start{
+  display: flex;
+  align-items: stretch;
+}
+
+.f-direction-column{
+  display: flex;
+  flex-direction: column;
+}
+/* Button
+-------------------------- */
+.btn-link{
+  width: 80px;
+  height: 23px;
+  line-height: 23px;
+  font-size: 12px;
+  border-radius: 15px;
+  color: #fff;
+  border: none;
+  background-color: #4fbd5a;
+  margin: 0;
+}
+
+/* 文本溢出
+-------------------------- */
+.text-overflow{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* 引入字体
+-------------------------- */
+@font-face{
+  font-family: kxzdt;
+  src: url('./fonts/kxzdt.ttf');
+}
