@@ -15,7 +15,9 @@
   "author": "Aresn",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.16.4",
     "iview": "^3.0.0",
+    "mongoose": "^5.4.5",
     "vue": "^2.5.16",
     "vue-router": "^2.8.1"
   },
