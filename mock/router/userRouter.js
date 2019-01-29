@@ -9,7 +9,7 @@ router.all('*',function (req, res, next) {
     res.setHeader('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
 
     if (req.method == 'OPTIONS') {
-        res.sendStatus(200); /让options请求快速返回/
+        res.sendStatus(200); /*让options请求快速返回*/
     }
     else {
         next();
@@ -19,19 +19,19 @@ router.get('/',function (req,res) {
     res.send('OJBK')
 })
 
-router.post('/register',async function (req,res) {
+router.post('/register',async function (req, res) {
     var body = req.body;
     try{
-        if(await User.findOne({email:body.email})){
+        if(await User.findOne({ phone: body.phone })){
             return res.status(200).json({
                 err_code:1,
-                message:'邮箱已存在'
+                message:'该手机号已存在'
             })
         }
-        if(await User.findOne({userName:body.userName})){
+        if(await User.findOne({ username: body.username })){
             return res.status(200).json({
-                err_code:2,
-                message:'用户名已存在'
+                err_code:1,
+                message:'该用户名已存在'
             })
         }
         //制定密钥
@@ -42,29 +42,30 @@ router.post('/register',async function (req,res) {
             .digest('hex')
         //数据插入到数据库
         var user = User({
-            userName:body.userName,
-            email:body.email,
+            username:body.username,
+            phone:body.phone,
             password:hmacPass,
         })
         await user.save()
-        await User.findOne({userName:body.userName,password:hmacPass},function (err,docs) {
+        await User.findOne({username:body.username,password:hmacPass},function (err,docs) {
             if(err){
-                return res.status(200).json({
-                    err_code:3,
-                    message:'验证有误，注册失败',
-                })
+              return res.status(200).json({
+                  err_code:2,
+                  message:'验证有误，注册失败',
+              })
             }
             return res.status(200).json({
-                err_code:0,
-                message:'注册成功',
-                data:docs
+              err_code:0,
+              message:'注册成功',
+              //   data:docs
+              data: {}
             })
         })
     }catch (err) {
-        res.status(500).json({
-            err_code:500,
-            message:err.message
-        })
+      res.status(500).json({
+          err_code:500,
+          message:err.message
+      })
     }
 })
 
@@ -77,24 +78,25 @@ router.post('/login',async function (req,res) {
         .update(body.password)
         .digest('hex')
     try{
-        await User.findOne({userName:body.userName,password:hmacPass},function (err,docs) {
+        await User.findOne({username:body.username,password:hmacPass},function (err,docs) {
             if(err){
                 return res.status(200).json({
-                    err_code:3,
-                    message:'密码错误，登录失败',
+                  err_code:1,
+                  message:'密码错误，登录失败',
                 })
             }
             return res.status(200).json({
-                err_code:0,
-                message:'登录成功',
-                data:docs
+              err_code:0,
+              message:'登录成功',
+              //   data:docs
+              data: {}
             })
         })
     }catch (err) {
-        res.status(500).json({
-            err_code:500,
-            message:'服务器错误'
-        })
+      res.status(500).json({
+          err_code:500,
+          message:'服务器错误'
+      })
     }
 })
 

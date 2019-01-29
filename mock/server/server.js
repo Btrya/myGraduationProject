@@ -1,7 +1,7 @@
 var express = require('express')
 var bodyParser = require('body-parser')
-// var sessionRouter = require('../router/session')
-// var articleRouter = require('../router/article')
+var userRouter = require('../router/userRouter')
+
 var app = express()
 var mongoose = require('../config/mongoose.js');
 var db = mongoose();
@@ -11,8 +11,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 //引入路由
-// app.use(sessionRouter)
-// app.use(articleRouter)
+app.use(userRouter)
+
 //跨域头
 app.all('*',function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
