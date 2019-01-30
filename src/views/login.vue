@@ -1,19 +1,15 @@
 <template>
-  <div class="login f-center">
+  <div id="login" class="login f-center">
     <div class="login-box">
-      <i-form v-ref:loginForm :model="loginFormData" :rules="ruleValidate" :label-width="80">
+      <i-form ref='loginForm' :model="loginFormData" :rules="ruleValidate" label-position="top">
         <Form-item label="用户名" prop="username">
-          <i-input :value.sync="loginFormData.username" placeholder="请输入用户名"></i-input>
-        </Form-item>
-        <Form-item label="手机号" prop="phone">
-          <i-input :value.sync="loginFormData.phone" placeholder="请输入手机号"></i-input>
+          <i-input v-model="loginFormData.username" placeholder="请输入用户名或手机号"></i-input>
         </Form-item>
         <Form-item label="密码" prop="password">
-          <i-input :value.sync="loginFormData.password" placeholder="请输入密码"></i-input>
+          <i-input type="password" v-model="loginFormData.password" placeholder="请输入密码"></i-input>
         </Form-item>
         <Form-item>
-          <i-button type="primary" @click="handleSubmit('loginForm')">提交</i-button>
-          <i-button type="ghost" @click="handleReset('loginForm')" style="margin-left: 8px">重置</i-button>
+          <i-button class="login-submit" type="success" @click="handleSubmit('loginForm')">登录</i-button>
         </Form-item>
       </i-form>
     </div>
@@ -21,19 +17,39 @@
 </template>
 
 <script>
+import particles from 'particles.js'
 export default {
   data() {
+    const validateUsername = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("用户名不能为空"))
+        return
+      }
+      var ranges = ['\ud83c[\udf00-\udfff]', '\ud83d[\udc00-\ude4f]', '\ud83d[\ude80-\udeff]']
+      if (new RegExp(ranges.join('|'), 'g').test(value)) {
+        callback(new Error("不可加入表情"))
+        return
+      }
+      callback()
+    }
+    const validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("密码不能为空"))
+        return
+      }
+      callback()
+    }
     return {
       loginFormData: {
         username: "",
-        password: '',
-        phone: ''
+        password: ""
       },
       ruleValidate: {
-        name: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
-        phone: [
-          { required: true, message: "邮箱不能为空", trigger: "blur" },
-          { type: "phone", message: "邮箱格式不正确", trigger: "blur" }
+        username: [
+          { validator: validateUsername, trigger: "blur" }
+        ],
+        password: [
+          { validator: validatePass, trigger: "blur" }
         ]
       }
     }
@@ -42,30 +58,65 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          this.$Message.success("提交成功!");
+          this.$Message.success("提交成功!")
         } else {
-          this.$Message.error("表单验证失败!");
+          this.$Message.error("表单验证失败!")
         }
-      });
-    },
-    handleReset(name) {
-      this.$refs[name].resetFields();
+      })
     }
+  },
+  mounted(){
+    particlesJS.load('login','src/styles/particles.json')
   }
-};
+}
 </script>
 
+<style lang="less">
+.login{
+  .particles-js-canvas-el{
+    position: absolute;
+    z-index: 1;
+  }
+  .ivu-form{
+    margin: .666667rem .533333rem;
+  }
+  .ivu-form-label-top .ivu-form-item-label{
+    font-family: kxzdt;
+    font-size: .426667rem !important;
+  }
+  .ivu-form-item-content {
+    font-family: kxzdt;
+  }
+  .ivu-input{
+    height: 1.066667rem !important;
+    padding: .266666rem .266666rem !important;
+    font-size: .426666rem !important;
+  }
+  .ivu-form-item-error-tip{
+    font-size: .3rem !important; 
+  }
+}
+</style>
 <style lang="less" scoped>
 .login {
   width: 100%;
   height: 100vh;
-  background-color: #f0f0f4;
+  background: url('../images/loginBg.jpg') no-repeat;
+  background-size:100% 100%;
 }
 .login-box {
   min-width: 0 !important;
-  width: 500px;
-  min-height: 300px;
-  background-color: cornflowerblue;
-  margin-bottom: 100px;
+  width: 8rem;
+  min-height: 4rem;
+  background-color: rgba(240, 240, 244, 0.6);
+  margin-bottom: 1.333333rem;
+  border-radius: .133333rem;
+  z-index: 2;
+}
+.login-submit{
+  width: 100%;
+  height: 1.306667rem;
+  font-size: .533333rem;
 }
 </style>
+
