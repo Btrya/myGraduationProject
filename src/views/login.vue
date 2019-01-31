@@ -18,6 +18,7 @@
 
 <script>
 import particles from 'particles.js'
+import { login } from '../apis/login.js'
 export default {
   data() {
     const validateUsername = (rule, value, callback) => {
@@ -59,9 +60,17 @@ export default {
       this.$refs[name].validate(valid => {
         if (valid) {
           this.$Message.success("提交成功!")
+          this.login()
         } else {
           this.$Message.error("表单验证失败!")
         }
+      })
+    },
+    // 登录
+    async login() {
+      const { loginFormData } = this
+      await login(loginFormData).then(res => {
+        console.log(res)
       })
     }
   },

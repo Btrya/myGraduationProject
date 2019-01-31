@@ -24,6 +24,7 @@
 
 <script>
 import particles from 'particles.js'
+import { register } from '../apis/login.js'
 export default {
   data() {
     const validateUsername = (rule, value, callback) => {
@@ -95,9 +96,17 @@ export default {
       this.$refs[name].validate(valid => {
         if (valid) {
           this.$Message.success("提交成功!")
+          this.register()
         } else {
           this.$Message.error("表单验证失败!")
         }
+      })
+    },
+    // 注册
+    async register() {
+      const { registerFormData } = this
+      await register(registerFormData).then(res => {
+        console.log(res)
       })
     }
   },
