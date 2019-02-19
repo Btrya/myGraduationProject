@@ -16,6 +16,7 @@
         </Form-item>
         <Form-item>
           <i-button class="register-submit" type="success" @click="handleSubmit('registerForm')">注册</i-button>
+          <p class="register-msg">已有账号?去<router-link to="/login">登录</router-link></p>
         </Form-item>
       </i-form>
     </div>
@@ -95,7 +96,7 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          this.$Message.success("提交成功!")
+          // this.$Message.success("提交成功!")
           this.register()
         } else {
           this.$Message.error("表单验证失败!")
@@ -106,7 +107,11 @@ export default {
     async register() {
       const { registerFormData } = this
       await register(registerFormData).then(res => {
-        console.log(res)
+        if (res.data.err_code === 0) {
+          this.$Message.success("注册成功!")
+          return
+        }
+        this.$Message.error(res.data.message)
       })
     }
   },
@@ -162,5 +167,8 @@ export default {
   width: 100%;
   height: 1.306667rem;
   font-size: .533333rem;
+}
+.register-msg{
+  font-size: .346667rem;
 }
 </style>

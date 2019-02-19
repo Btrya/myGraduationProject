@@ -1,6 +1,7 @@
 var express = require('express')
 var bodyParser = require('body-parser')
 var userRouter = require('../router/userRouter')
+var articleRouter = require('../router/articleRouter')
 
 var app = express()
 var mongoose = require('../config/mongoose.js');
@@ -12,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 //引入路由
 app.use(userRouter)
+app.use(articleRouter)
 
 // //跨域头
 // app.all('*',function (req, res, next) {

@@ -10,6 +10,7 @@
         </Form-item>
         <Form-item>
           <i-button class="login-submit" type="success" @click="handleSubmit('loginForm')">登录</i-button>
+          <p class="login-msg">没有账号?去<router-link to="/register">注册</router-link></p>
         </Form-item>
       </i-form>
     </div>
@@ -59,7 +60,7 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          this.$Message.success("提交成功!")
+          // this.$Message.success("提交成功!")
           this.login()
         } else {
           this.$Message.error("表单验证失败!")
@@ -70,7 +71,12 @@ export default {
     async login() {
       const { loginFormData } = this
       await login(loginFormData).then(res => {
-        console.log(res)
+        if (res.data.err_code === 0) {
+          this.$Message.success("登录成功!")
+          this.$router.push({path: '/'})
+          return
+        }
+        this.$Message.error(res.data.message)
       })
     }
   },
@@ -126,6 +132,9 @@ export default {
   width: 100%;
   height: 1.306667rem;
   font-size: .533333rem;
+}
+.login-msg{
+  font-size: .346667rem;
 }
 </style>
 

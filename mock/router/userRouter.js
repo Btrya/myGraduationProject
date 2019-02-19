@@ -49,17 +49,26 @@ router.post('/register',async function (req, res) {
         await user.save()
         await User.findOne({username:body.username,password:hmacPass},function (err,docs) {
             if(err){
-              return res.status(200).json({
-                  err_code:2,
-                  message:'验证有误，注册失败',
+              return res.status(500).json({
+                  err_code:4,
+                  message:'服务器出错：' + err,
               })
             }
-            return res.status(200).json({
-              err_code:0,
-              message:'注册成功',
-              //   data:docs
-              data: {}
-            })
+            if (docs) {
+              return res.status(200).json({
+                err_code:0,
+                message:'注册成功',
+                //   data:docs
+                data: {}
+              })
+            } else {
+              return res.status(200).json({
+                err_code:1,
+                message:'注册失败',
+                //   data:docs
+                data: {}
+              })
+            }
         })
     }catch (err) {
       res.status(500).json({
@@ -70,7 +79,8 @@ router.post('/register',async function (req, res) {
 })
 
 router.post('/login',async function (req,res) {
-    var body = req.body;
+    var body = req.body
+    console.log(body)
     //制定密钥
     const secret = 'hello world'
     //用Hmac算法加密密码
@@ -80,17 +90,26 @@ router.post('/login',async function (req,res) {
     try{
         await User.findOne({username:body.username,password:hmacPass},function (err,docs) {
             if(err){
-                return res.status(200).json({
-                  err_code:1,
-                  message:'密码错误，登录失败',
+                return res.status(500).json({
+                  err_code:4,
+                  message:'服务器错误：' + err,
                 })
             }
-            return res.status(200).json({
-              err_code:0,
-              message:'登录成功',
-              //   data:docs
-              data: {}
-            })
+            if (docs) {
+              return res.status(200).json({
+                err_code:0,
+                message:'登录成功',
+                //   data:docs
+                data: {}
+              })
+            } else {
+              return res.status(200).json({
+                err_code:1,
+                message:'登录失败，请检查用户名和密码是否正确',
+                //   data:docs
+                data: {}
+              })
+            }
         })
     }catch (err) {
       res.status(500).json({
