@@ -8,6 +8,7 @@ var articlesSchema = new Schema({
     imageUrl: { type: String }, // 图片
     created_time: { type: Date, default: Date.now },
     last_modified_time: { type: Date, default: Date.now },
-    username: { type: String, required: true }
+    username: { type: String, required: true },
+    userId: { type: String, required: true }
 });
 module.exports = articlesSchema;
