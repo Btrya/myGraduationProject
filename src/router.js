@@ -19,6 +19,13 @@ const routers = [
             title: '登录'
         },
         component: (resolve) => require(['./views/login.vue'], resolve)
+    },
+    {
+        path: '/publish',
+        meta: {
+            title: '发布'
+        },
+        component: (resolve) => require(['./views/publish.vue'], resolve)
     }
 ];
 export default routers;

@@ -108,7 +108,9 @@ export default {
       const { registerFormData } = this
       await register(registerFormData).then(res => {
         if (res.data.err_code === 0) {
+          this.$store.dispatch('saveUser', res.data.data)
           this.$Message.success("注册成功!")
+          this.$router.push({path: '/'})
           return
         }
         this.$Message.error(res.data.message)

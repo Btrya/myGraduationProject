@@ -10,7 +10,10 @@
         </Form-item>
         <Form-item>
           <i-button class="login-submit" type="success" @click="handleSubmit('loginForm')">登录</i-button>
-          <p class="login-msg">没有账号?去<router-link to="/register">注册</router-link></p>
+          <div class="f-space-between">
+            <p class="login-msg">没有账号?去<router-link to="/register">注册</router-link></p>
+            <p class="login-msg">回<router-link to="/">首页</router-link></p>
+          </div>
         </Form-item>
       </i-form>
     </div>
@@ -72,6 +75,7 @@ export default {
       const { loginFormData } = this
       await login(loginFormData).then(res => {
         if (res.data.err_code === 0) {
+          this.$store.dispatch('saveUser', res.data.data)
           this.$Message.success("登录成功!")
           this.$router.push({path: '/'})
           return

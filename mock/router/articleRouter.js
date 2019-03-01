@@ -187,7 +187,6 @@ router.post('/article/update', async function (req, res) {
           message: '修改失败' + err
         })
       } else {
-        console.log(docs)
         return res.status(500).json({
           err_code: 0,
           message: '修改成功',

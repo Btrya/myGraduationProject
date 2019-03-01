@@ -5,10 +5,14 @@ var articleRouter = require('../router/articleRouter')
 
 var app = express()
 var mongoose = require('../config/mongoose.js');
+// 引入七牛云配置
+const qnconfig = require('../config/qiniu.js')
 var db = mongoose();
 //配置解析表单POST请求体插件
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({
+    extended: false
+}))
 // parse application/json
 app.use(bodyParser.json())
 //引入路由
@@ -28,6 +32,11 @@ app.use(articleRouter)
 //         next();
 //     }
 // });
-app.listen(3000,function () {
+app.listen(3000, function () {
     console.log('open sever successful, listen in port: 3000')
 })
+app.get('/getToken', (req, res, next) => {
+    // console.log(qnconfig.uploadToken)
+    res.status(200).send(qnconfig.uploadToken)
+})
+

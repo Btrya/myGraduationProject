@@ -2,8 +2,8 @@ import axios from 'axios';
 import baseUrl from './config.js'
 // var baseUrl = process.env.BASE_API;
 const urls = {
-  register: '/register',
-  login: '/login'
+  getToken: '/getToken',
+  uploadQiNiu: 'https://upload-z2.qiniup.com'
 }
 // 合并请求链接
 const apis = Object.keys(urls)
@@ -12,20 +12,19 @@ const apis = Object.keys(urls)
     return acc;
   }, {});
 
-// 注册
-export const register = (query) => {
+export const getToken = (query) => {
   return axios({
-    url: apis.register,
+    url: apis.getToken,
+    method: 'get',
+    params: query
+  })
+};
+
+export const uploadQiNiu = (query) => {
+  return axios({
+    url: urls.uploadQiNiu,
     method: 'post',
     data: query
   })
 };
 
-// 登录
-export const login = (query) => {
-  return axios({
-    url: apis.login,
-    method: 'post',
-    data: query
-  })
-};

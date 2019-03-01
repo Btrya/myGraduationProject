@@ -32,7 +32,9 @@ export default {
     foundList,
     loseList
   },
-  methods: {}
+  mounted() {
+    
+  }
 };
 </script>
 
