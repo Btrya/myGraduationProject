@@ -7,6 +7,7 @@ const key = 'lfuser'
 const state = {
   username: '',
   objectId: '',
+  phone: 0,
   avatar: ''
 }
 // 相当于一个computed 通过this.$store.getters.函数名 获得返回的结果
@@ -15,7 +16,7 @@ const getters = {
   getUser: state => {
     const tempStorage = JSON.parse(localStorage.getItem(key))
     if (tempStorage) {
-      [state.username, state.objectId, state.avatar] = [tempStorage.username, tempStorage.objectId, tempStorage.avatar]
+      [state.username, state.objectId, state.phone, state.avatar] = [tempStorage.username, tempStorage.objectId, tempStorage.phone, tempStorage.avatar]
     }
     return state
   }
@@ -24,10 +25,11 @@ const getters = {
 const mutations = {
   // 储存用户状态到localStorage
   saveUser: (state, user) => {
-    [state.username, state.objectId, state.avatar] = [user.username, user.objectId, user.avatar]
+    [state.username, state.objectId, state.phone, state.avatar] = [user.username, user.objectId, user.phone, user.avatar]
     const tempUser = {
       username: state.username,
       objectId: state.objectId,
+      phone: state.phone,
       avatar: state.avatar
     }
     localStorage.setItem(key, JSON.stringify(tempUser))
@@ -36,6 +38,7 @@ const mutations = {
     localStorage.clear()
     state.username = ''
     state.objectId = ''
+    state.phone = 0
     state.avatar = ''
   }
 }

@@ -26,6 +26,24 @@ const routers = [
             title: '发布'
         },
         component: (resolve) => require(['./views/publish.vue'], resolve)
+    },
+    {
+      path: '/personal',
+      meta: {
+          title: '个人中心'
+      },
+      component: (resolve) => require(['./views/personal.vue'], resolve)
+    },
+    {
+      path: '/404',
+      meta: {
+        title: '404页面'
+      },
+      component: (resolve) => require(['./views/notFound.vue'], resolve)
+    },
+    {
+      path: '*',
+      redirect: '/404'
     }
 ];
 export default routers;

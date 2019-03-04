@@ -1,5 +1,5 @@
 <template>
-<div class="loseList">
+<div class="loseList animated bounceInUp delay-2s">
   <Divider>寻物信息</Divider>
   <div class="loseList-list f-column">
       <div v-for="item in 6" class="loseList-item f-vertical">

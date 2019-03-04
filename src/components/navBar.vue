@@ -1,5 +1,5 @@
 <template>
-  <div class="navBar">
+  <div class="navBar animated bounceInLeft fast">
     <div class="navBar-logo">
       <img mode="widthFix" src="../images/logoko.png" alt="Logo">
     </div>
@@ -9,7 +9,7 @@
       <router-link to="/register">注册</router-link>
     </div>
     <div v-else class="navBar-user f-vertical">
-      <img mode="widthFix" :src="avatar" alt="avatar"/>
+      <img mode="widthFix" :src="avatar" alt="avatar" @click="gotoSetting"/>
       <div class="f-column">
         <span>{{username}}</span>
         <a @click="quitLogin">退出登录</a>
@@ -42,6 +42,9 @@ export default {
       this.$store.dispatch('clearUser')
       this.initUser()
       this.$Message.success("退出登录")
+    },
+    gotoSetting() {
+      this.$router.push({path: '/personal'})
     }
   },
   mounted() {
@@ -76,7 +79,7 @@ export default {
     color: #515a61;
   }
   i {
-    margin-bottom: .066667rem;
+    margin-bottom: 0;
   }
 }
 .navBar-menu {

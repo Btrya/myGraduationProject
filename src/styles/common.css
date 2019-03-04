@@ -23,6 +23,11 @@ body{
   justify-content: center;
 }
 
+.f-vertical-center{
+  display: flex;
+  justify-content: center;
+}
+
 .f-space-between{
   display: flex;
   justify-content: space-between;

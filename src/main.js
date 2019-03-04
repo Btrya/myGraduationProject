@@ -5,6 +5,7 @@ import Routers from './router'
 import Util from './libs/util'
 import App from './app.vue'
 import store from './store'
+import './libs/animate.css'
 import 'iview/dist/styles/iview.css'
 import './theme/index.less'
 import './styles/flexible.css' // px2rem

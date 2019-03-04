@@ -3,7 +3,8 @@ import baseUrl from './config.js'
 // var baseUrl = process.env.BASE_API;
 const urls = {
   register: '/register',
-  login: '/login'
+  login: '/login',
+  updateUser: '/updateUser'
 }
 // 合并请求链接
 const apis = Object.keys(urls)
@@ -25,6 +26,15 @@ export const register = (query) => {
 export const login = (query) => {
   return axios({
     url: apis.login,
+    method: 'post',
+    data: query
+  })
+};
+
+// 修改信息
+export const updateUser = (query) => {
+  return axios({
+    url: apis.updateUser,
     method: 'post',
     data: query
   })

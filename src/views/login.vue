@@ -3,7 +3,7 @@
     <div class="login-box">
       <i-form ref='loginForm' :model="loginFormData" :rules="ruleValidate" label-position="top">
         <Form-item label="用户名" prop="username">
-          <i-input v-model="loginFormData.username" placeholder="请输入用户名或手机号"></i-input>
+          <i-input v-model="loginFormData.username" placeholder="请输入手机号"></i-input>
         </Form-item>
         <Form-item label="密码" prop="password">
           <i-input type="password" v-model="loginFormData.password" placeholder="请输入密码"></i-input>
@@ -27,7 +27,7 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("用户名不能为空"))
+        callback(new Error("手机号不能为空"))
         return
       }
       var ranges = ['\ud83c[\udf00-\udfff]', '\ud83d[\udc00-\ude4f]', '\ud83d[\ude80-\udeff]']

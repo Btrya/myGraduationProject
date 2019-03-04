@@ -1,5 +1,5 @@
 <template>
-<div class="foundList">
+<div class="foundList animated bounceInUp delay-1s">
   <Divider>招领信息</Divider>
   <div class="foundList-list f-column">
     <div class="foundList-item f-vertical">

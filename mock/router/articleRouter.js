@@ -38,7 +38,7 @@ router.post('/article/publish', async function (req, res) {
       username: body.username
     }, function (err, docs) {
       if (err) {
-        return res.status(500).json({
+        return res.status(200).json({
           err_code: 4,
           message: '服务器出错：' + err,
         })
@@ -100,7 +100,7 @@ router.get('/article/getIndexArticle', async function (req, res) {
   try {
     await Article.find({articleType: 'found'}, function(err, docs){
       if(err){
-        return res.status(500).json({
+        return res.status(200).json({
           err_code: 1,
           message: '查询失败' + err
         })
@@ -110,7 +110,7 @@ router.get('/article/getIndexArticle', async function (req, res) {
     }).sort({"created_time": -1}).limit(10)
     await Article.find({articleType: 'lose'}, function(err, docs){
       if(err){
-        return res.status(500).json({
+        return res.status(200).json({
           err_code: 1,
           message: '查询失败' + err
         })
@@ -153,7 +153,7 @@ router.post('/article/getArticle', async function (req, res) {
     }).sort({"created_time": 1}).skip((body.pageNum - 1) * body.pageSize).limit(~~body.pageSize)
     await Article.countDocuments({articleType: body.articleType, userId:body.userId}, function(err, count) {
       if (err) {
-        return res.status(500).json({
+        return res.status(200).json({
           err_code: 1,
           message: '查询失败' + err
         })
@@ -180,14 +180,14 @@ router.post('/article/getArticle', async function (req, res) {
 router.post('/article/update', async function (req, res) {
   var body = req.body;
   try {
-    await Article.update({_id: body._id}, {$set: { title: body.title }}, function(err, docs){
+    await Article.updateOne({_id: body._id}, {$set: { title: body.title }}, function(err, docs){
       if(err){
-        return res.status(500).json({
+        return res.status(200).json({
           err_code: 1,
           message: '修改失败' + err
         })
       } else {
-        return res.status(500).json({
+        return res.status(200).json({
           err_code: 0,
           message: '修改成功',
           data: {}
