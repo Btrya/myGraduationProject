@@ -1,16 +1,18 @@
 <template>
 <div class="loseList animated bounceInUp delay-2s">
   <Divider>寻物信息</Divider>
-  <div class="loseList-list f-column">
-      <div v-for="item in 6" class="loseList-item f-vertical">
-        <img mode="widthFix" src="" alt="">
+  <div v-if="list.length > 0" class="loseList-list f-column">
+      <div v-for="(item, index) in list" :key="index" class="loseList-item f-vertical">
+        <img mode="widthFix" :src="item.imageUrl" alt=""/>
         <div class="f-column loseList-item-text">
-          <div class="f-flex-start"><Icon type="ios-clock" size="25"/><p>发生时间：2018-12-16</p></div>
-          <div class="f-flex-start"><Icon type="ios-filing" size="25"/><p>寻找物品：水杯</p></div>
-          <div class="f-flex-start"><Icon type="ios-call" size="25"/><p>联系电话：11111111111111</p></div>
-          <div class="f-flex-start"><Icon type="ios-list-box" size="25"/><p>物品详情：白色的水杯白色的水杯白色的水杯白色的水杯白色的水杯白色的水杯白色的水杯白色的水杯</p></div>
+          <div class="f-flex-start"><Icon type="ios-clock" size="25"/><p>发生时间：{{item.time_quantum[0]}}-{{item.time_quantum[1]}}</p></div>
+          <div class="f-flex-start"><Icon type="ios-filing" size="25"/><p>寻找物品：{{item.product}}</p></div>
+          <div class="f-flex-start"><Icon type="ios-list-box" size="25"/><p>描述：{{item.content}}</p></div>
         </div>
       </div>
+  </div>
+  <div v-else class="loseList-none f-center">
+    暂无数据
   </div>
 </div>
 </template>
@@ -20,14 +22,15 @@ export default {
   props: {
     carouselImgs: {
       type: Array
-    }
+    },
+    list: Array
   },
   data() {
     return {
       current: 0
     }
   },
-  created() {
+  mounted() {
     
   }
 }
@@ -62,5 +65,11 @@ export default {
 }
 .loseList-item-text{
   max-width: 64%;
+}
+.loseList-none{
+  width: 100%;
+  height: 5.333333rem;
+  font-size: .8rem;
+  font-family: kxzdt;
 }
 </style>

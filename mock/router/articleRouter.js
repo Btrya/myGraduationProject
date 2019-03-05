@@ -1,5 +1,6 @@
 var express = require('express')
 var router = express.Router()
+var utils = require('../utils/utils')
 const crypto = require('crypto');
 //引入模型
 var Article = require('../models/article')
@@ -25,11 +26,14 @@ router.post('/article/publish', async function (req, res) {
     //数据插入到数据库
     var article = Article({
       articleType: body.articleType, // 文章类型
-      title: body.title, // 标题
+      contact: body.contact, // 联系方式
+      // title: body.title, // 标题
       content: body.content, // 内容
       imageUrl: body.imageUrl, // 图片
+      product: body.product, // 寻找、招领的物品
       username: body.username,
-      userId: body.userId
+      userId: body.userId,
+      time_quantum: body.timeQuantum // 时间段
     })
     await article.save()
     await Article.findOne({
@@ -98,7 +102,11 @@ router.get('/article/getIndexArticle', async function (req, res) {
   var body = req.query;
   let resData = {}
   try {
-    await Article.find({articleType: 'found'}, function(err, docs){
+    await Article.find({articleType: 'found'}, {
+      articleType: 0,
+      __v: 0,
+      last_modified_time: 0
+    }, function(err, docs){
       if(err){
         return res.status(200).json({
           err_code: 1,
@@ -108,7 +116,11 @@ router.get('/article/getIndexArticle', async function (req, res) {
         resData.foundData = docs
       }
     }).sort({"created_time": -1}).limit(10)
-    await Article.find({articleType: 'lose'}, function(err, docs){
+    await Article.find({articleType: 'lose'}, {
+      articleType: 0,
+      __v: 0,
+      last_modified_time: 0
+    }, function(err, docs){
       if(err){
         return res.status(200).json({
           err_code: 1,

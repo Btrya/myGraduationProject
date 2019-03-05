@@ -1,5 +1,6 @@
 var express = require('express')
 var router = express.Router()
+var utils = require('../utils/utils')
 const crypto = require('crypto');
 //引入模型
 var User = require('../models/user')
@@ -155,7 +156,7 @@ router.post('/updateUser', async function (req, res) {
   let setObj = {
     username: body.username,
     avatar: body.avatar,
-    last_modified_time: localDate()
+    last_modified_time: utils.localDate()
   }
   if (body.password && body.newPassword) {
     //制定密钥
@@ -212,9 +213,4 @@ router.post('/updateUser', async function (req, res) {
   }
 })
 
-function localDate(v) {
-  const d = new Date(v || Date.now())
-  d.setMinutes(d.getMinutes() - d.getTimezoneOffset())
-  return d.toISOString()
-}
 module.exports = router

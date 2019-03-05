@@ -1,16 +1,18 @@
 <template>
 <div class="foundList animated bounceInUp delay-1s">
   <Divider>招领信息</Divider>
-  <div class="foundList-list f-column">
-    <div class="foundList-item f-vertical">
-      <img mode="widthFix" src="" alt="">
-      <div class="f-column foundList-item-text">
-        <div class="f-flex-start"><Icon type="ios-clock" size="25"/><p>发生时间：2018-12-16</p></div>
-        <div class="f-flex-start"><Icon type="ios-filing" size="25"/><p>招领物品：水杯</p></div>
-        <div class="f-flex-start"><Icon type="ios-call" size="25"/><p>联系电话：11111111111111</p></div>
-        <div class="f-flex-start"><Icon type="ios-list-box" size="25"/><p>物品详情：白色的水杯白色的水杯白色的水杯白色的水杯白色的水杯白色的水杯白色的水杯白色的水杯</p></div>
-      </div>
+  <div v-if="list.length > 0" class="foundList-list f-column">
+    <div v-for="(item, index) in list" :key="index" class="foundList-item f-vertical">
+        <img mode="widthFix" :src="item.imageUrl" alt=""/>
+        <div class="f-column foundList-item-text">
+          <div class="f-flex-start"><Icon type="ios-clock" size="25"/><div class="f-column"><p>发生时间：{{item.time_quantum[0]}}</p><p>至{{item.time_quantum[1]}}</p></div></div>
+          <div class="f-flex-start"><Icon type="ios-filing" size="25"/><p>寻找物品：{{item.product}}</p></div>
+          <div class="f-flex-start"><Icon type="ios-list-box" size="25"/><p>描述：{{item.content}}</p></div>
+        </div>
     </div>
+  </div>
+  <div v-else class="foundList-none f-center">
+    暂无数据
   </div>
 </div>
 </template>
@@ -20,14 +22,15 @@ export default {
   props: {
     carouselImgs: {
       type: Array
-    }
+    },
+    list: Array
   },
   data() {
     return {
       current: 0
     }
   },
-  created() {
+  mounted() {
     
   }
 }
@@ -44,10 +47,11 @@ export default {
 }
 .foundList-list{
   margin-top: 30px;
-  background: #f0f0f4;
 }
 .foundList-item{
+  background: #f0f0f4;
   min-height: 150px;
+  margin-bottom: 20px;
   img{
     margin: 20px 30px;
     width:100px;
@@ -61,5 +65,11 @@ export default {
 }
 .foundList-item-text{
   max-width: 64%;
+}
+.foundList-none{
+  width: 100%;
+  height: 5.333333rem;
+  font-size: .8rem;
+  font-family: kxzdt;
 }
 </style>
