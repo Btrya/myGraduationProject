@@ -2,10 +2,11 @@
 <div class="foundList animated bounceInUp delay-1s">
   <Divider>招领信息</Divider>
   <div v-if="list.length > 0" class="foundList-list f-column">
-    <div v-for="(item, index) in list" :key="index" class="foundList-item f-vertical">
-        <img mode="widthFix" :src="item.imageUrl" alt=""/>
+    <div v-for="(item, index) in list" :key="index" class="foundList-item f-vertical" @click="sendArticleId(item._id)">
+        <img v-if="item.imageUrl !== ''" mode="widthFix" :src="item.imageUrl" alt=""/>
+        <img v-else mode="widthFix" src="../images/no-pic.jpg" alt=""/>
         <div class="f-column foundList-item-text">
-          <div class="f-flex-start"><Icon type="ios-clock" size="25"/><div class="f-column"><p>发生时间：{{item.time_quantum[0]}}</p><p>至{{item.time_quantum[1]}}</p></div></div>
+          <div class="f-flex-start"><Icon type="ios-clock" size="25"/><div class="f-column"><p>发生时间：{{item.time_quantum[0]}}</p><p class="foundList-timeText">至{{item.time_quantum[1]}}</p></div></div>
           <div class="f-flex-start"><Icon type="ios-filing" size="25"/><p>寻找物品：{{item.product}}</p></div>
           <div class="f-flex-start"><Icon type="ios-list-box" size="25"/><p>描述：{{item.content}}</p></div>
         </div>
@@ -30,6 +31,11 @@ export default {
       current: 0
     }
   },
+  methods: {
+    sendArticleId(id) {
+      this.$emit('getArticle', id)
+    }
+  },
   mounted() {
     
   }
@@ -49,7 +55,7 @@ export default {
   margin-top: 30px;
 }
 .foundList-item{
-  background: #f0f0f4;
+  background: #f8f8f9;
   min-height: 150px;
   margin-bottom: 20px;
   img{
@@ -62,6 +68,9 @@ export default {
     margin-left: 8px;
     font-size:16px;
   }
+}
+.foundList-timeText{
+  margin-left: 1.3rem !important;
 }
 .foundList-item-text{
   max-width: 64%;

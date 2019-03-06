@@ -16,7 +16,10 @@
           </RadioGroup>
         </Form-item>
         <Form-item label="物品:" prop="product">
-          <i-input v-model="publishFormData.product" placeholder="请输入找到的/寻找的物品"></i-input>
+          <i-input v-model="publishFormData.product" placeholder="请输入找到/丢失的物品"></i-input>
+        </Form-item>
+        <Form-item label="地点:" prop="place">
+          <i-input v-model="publishFormData.place" placeholder="请输入找到/丢失物品时候的地点"></i-input>
         </Form-item>
         <Form-item class="publish-timeQuantum" label="发生时间段:" prop="timeQuantum">
           <DatePicker v-model="publishFormData.timeQuantum" :options="options" type="datetimerange" format="yyyy-MM-dd HH:mm" placeholder="请选择发生时间段" size="large" style="width: 60%;" @on-change="changeTimeQuantum"></DatePicker>
@@ -66,6 +69,7 @@ export default {
       publishFormData: {
         contact: ['手机号', ''],
         product: '',
+        place: '',
         articleType: '招领启事',
         content: '',
         imageUrl: '',
@@ -99,6 +103,7 @@ export default {
       this.publishFormData = {
         contact: ['手机号', ''],
         product: '',
+        place: '',
         articleType: '招领启事',
         content: '',
         imageUrl: '',

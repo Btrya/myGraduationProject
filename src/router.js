@@ -35,6 +35,13 @@ const routers = [
       component: (resolve) => require(['./views/personal.vue'], resolve)
     },
     {
+      path: '/information',
+      meta: {
+          title: '更多信息'
+      },
+      component: (resolve) => require(['./views/information.vue'], resolve)
+    },
+    {
       path: '/404',
       meta: {
         title: '404页面'

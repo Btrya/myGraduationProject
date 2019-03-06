@@ -27,13 +27,16 @@ router.post('/article/publish', async function (req, res) {
     var article = Article({
       articleType: body.articleType, // 文章类型
       contact: body.contact, // 联系方式
+      place: body.place, // 地点
       // title: body.title, // 标题
       content: body.content, // 内容
       imageUrl: body.imageUrl, // 图片
       product: body.product, // 寻找、招领的物品
       username: body.username,
       userId: body.userId,
-      time_quantum: body.timeQuantum // 时间段
+      time_quantum: body.timeQuantum, // 时间段
+      created_time: utils.localDate(),
+      last_modified_time: utils.localDate()
     })
     await article.save()
     await Article.findOne({
@@ -143,14 +146,43 @@ router.get('/article/getIndexArticle', async function (req, res) {
   }
 })
 
+// 根据文章id查询对应文章
+router.post('/article/getArticleById', async function(req, res) {
+  var body = req.body
+  try {
+    await Article.findOne({ _id:body.id }, { _id: 0, userId: 0, __v: 0 }, function(err, docs){
+      if (err) {
+        return res.status(200).json({
+          err_code: 1,
+          message: '查询失败' + err
+        })
+      } else {
+        return res.status(200).json({
+          err_code: 0,
+          message: '查询成功',
+          data: docs
+        })
+      }
+    })
+  } catch (error) {
+    res.status(500).json({
+      err_code: 500,
+      message: error.message
+    })
+  }
+})
 // 根据条件获取文章
 router.post('/article/getArticle', async function (req, res) {
   var body = req.body;
+  let checkObj = {articleType: body.articleType}
+  if (body.userId){
+    checkObj.userId = body.userId
+  }
   let resData = {}
   try {
-    await Article.find({articleType: body.articleType, userId:body.userId}, { _id: 0, userId: 0, __v: 0 }, function(err, docs){
+    await Article.find(checkObj, { userId: 0, __v: 0 }, function(err, docs){
       if(err){
-        return res.status(500).json({
+        return res.status(200).json({
           err_code: 1,
           message: '查询失败' + err
         })
@@ -162,8 +194,8 @@ router.post('/article/getArticle', async function (req, res) {
         // })
         resData.data = docs
       }
-    }).sort({"created_time": 1}).skip((body.pageNum - 1) * body.pageSize).limit(~~body.pageSize)
-    await Article.countDocuments({articleType: body.articleType, userId:body.userId}, function(err, count) {
+    }).sort({"created_time": -1}).skip((body.pageNum - 1) * body.pageSize).limit(~~body.pageSize)
+    await Article.countDocuments(checkObj, function(err, count) {
       if (err) {
         return res.status(200).json({
           err_code: 1,

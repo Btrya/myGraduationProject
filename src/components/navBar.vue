@@ -19,7 +19,8 @@
       <router-link to="/">首页</router-link>
       <router-link to="/publish">发布</router-link>
       <router-link to="/personal">个人中心</router-link>
-      <span>首页</span>
+      <router-link :to="{path:'/information', query:{articleType: 'found'}}">更多招领</router-link>
+      <router-link :to="{path:'/information', query:{articleType: 'lose'}}">更多寻物</router-link>
     </div>
   </div>
 </template>

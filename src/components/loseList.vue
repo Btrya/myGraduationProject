@@ -2,8 +2,9 @@
 <div class="loseList animated bounceInUp delay-2s">
   <Divider>寻物信息</Divider>
   <div v-if="list.length > 0" class="loseList-list f-column">
-      <div v-for="(item, index) in list" :key="index" class="loseList-item f-vertical">
-        <img mode="widthFix" :src="item.imageUrl" alt=""/>
+      <div v-for="(item, index) in list" :key="index" class="loseList-item f-vertical" @click="sendArticleId(item._id)">
+        <img v-if="item.imageUrl !== ''" mode="widthFix" :src="item.imageUrl" alt=""/>
+        <img v-else mode="widthFix" src="../images/no-pic.jpg" alt=""/>
         <div class="f-column loseList-item-text">
           <div class="f-flex-start"><Icon type="ios-clock" size="25"/><p>发生时间：{{item.time_quantum[0]}}-{{item.time_quantum[1]}}</p></div>
           <div class="f-flex-start"><Icon type="ios-filing" size="25"/><p>寻找物品：{{item.product}}</p></div>
@@ -30,6 +31,11 @@ export default {
       current: 0
     }
   },
+  methods: {
+    sendArticleId(id) {
+      this.$emit('getArticle', id)
+    }
+  },
   mounted() {
     
   }
@@ -49,7 +55,7 @@ export default {
   margin-top: 30px;
 }
 .loseList-item{
-  background: #f0f0f4;
+  background: #f8f8f9;
   min-height: 150px;
   margin-bottom: 20px;
   img{
