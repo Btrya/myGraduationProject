@@ -54,12 +54,15 @@ export default {
   methods: {
     // 给子组件赋值
     clearValue() {
-      this.value = '';
+      this.value = ''
+    },
+    getContent() {
+      this.value = this.content
     }
   },
   mounted() {
     // 挂载给子组件赋值
-    this.value = this.content;
+    this.getContent()
   },
   watch: {
     // 监听value的变化，并且将变化后的值传给父组件

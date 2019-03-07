@@ -2,14 +2,19 @@
 <div class="foundList animated bounceInUp delay-1s">
   <Divider>招领信息</Divider>
   <div v-if="list.length > 0" class="foundList-list f-column">
-    <div v-for="(item, index) in list" :key="index" class="foundList-item f-vertical" @click="sendArticleId(item._id)">
-        <img v-if="item.imageUrl !== ''" mode="widthFix" :src="item.imageUrl" alt=""/>
-        <img v-else mode="widthFix" src="../images/no-pic.jpg" alt=""/>
-        <div class="f-column foundList-item-text">
-          <div class="f-flex-start"><Icon type="ios-clock" size="25"/><div class="f-column"><p>发生时间：{{item.time_quantum[0]}}</p><p class="foundList-timeText">至{{item.time_quantum[1]}}</p></div></div>
-          <div class="f-flex-start"><Icon type="ios-filing" size="25"/><p>寻找物品：{{item.product}}</p></div>
-          <div class="f-flex-start"><Icon type="ios-list-box" size="25"/><p>描述：{{item.content}}</p></div>
+    <div v-for="(item, index) in list" :key="index" @click="sendArticleId(item._id)">
+      <Card :padding="10" style="width: 100%;">
+        <div class="foundList-item f-vertical">
+          <img v-if="item.imageUrl !== ''" mode="widthFix" :src="item.imageUrl" alt=""/>
+          <img v-else mode="widthFix" src="../images/no-pic.jpg" alt=""/>
+          <div class="f-column foundList-item-text">
+            <div class="f-flex-start"><Icon type="ios-clock" size="25"/><div class="f-column"><p>发生时间：{{item.time_quantum[0]}}</p><p class="foundList-timeText">至{{item.time_quantum[1]}}</p></div></div>
+            <div class="f-flex-start"><Icon type="ios-filing" size="25"/><p>寻找物品：{{item.product}}</p></div>
+            <div class="f-flex-start"><Icon type="md-pin" size="25"/><p>地点：{{item.place}}</p></div>
+            <div class="f-flex-start"><Icon type="ios-list-box" size="25"/><p>描述：{{item.content}}</p></div>
+          </div>
         </div>
+      </Card>
     </div>
   </div>
   <div v-else class="foundList-none f-center">
@@ -53,15 +58,19 @@ export default {
 }
 .foundList-list{
   margin-top: 30px;
+  .ivu-card-bordered{
+    margin-bottom: .133333rem;
+    cursor: pointer;
+  }
 }
 .foundList-item{
-  background: #f8f8f9;
-  min-height: 150px;
-  margin-bottom: 20px;
+  // background: #f8f8f9;
+  min-height: 2rem;
+  // margin-bottom: 20px;
   img{
-    margin: 20px 30px;
-    width:100px;
-    height: 100px;
+    margin: .266667rem .4rem;
+    width: 1.733333rem;
+    height: auto;
     background-color: cornflowerblue;
   }
   p{

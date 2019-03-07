@@ -5,7 +5,9 @@ const urls = {
   publish: '/article/publish',
   getIndexArticle: '/article/getIndexArticle',
   getArticleById: '/article/getArticleById',
-  getArticle: '/article/getArticle'
+  getArticle: '/article/getArticle',
+  update: '/article/update',
+  deleteById: '/article/deleteById'
 }
 // 合并请求链接
 const apis = Object.keys(urls)
@@ -31,7 +33,7 @@ export const getIndexArticle = () => {
   })
 };
 
-// 首页获取文章数据
+// 根据文章id获取文章
 export const getArticleById = (query) => {
   return axios({
     url: apis.getArticleById,
@@ -44,6 +46,24 @@ export const getArticleById = (query) => {
 export const getArticle = (query) => {
   return axios({
     url: apis.getArticle,
+    method: 'post',
+    data: query
+  })
+};
+
+// 根据条件分页获取数据
+export const update = (query) => {
+  return axios({
+    url: apis.update,
+    method: 'post',
+    data: query
+  })
+};
+
+// 根据id删除文章
+export const deleteById = (query) => {
+  return axios({
+    url: apis.deleteById,
     method: 'post',
     data: query
   })

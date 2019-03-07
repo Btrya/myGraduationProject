@@ -150,7 +150,7 @@ router.get('/article/getIndexArticle', async function (req, res) {
 router.post('/article/getArticleById', async function(req, res) {
   var body = req.body
   try {
-    await Article.findOne({ _id:body.id }, { _id: 0, userId: 0, __v: 0 }, function(err, docs){
+    await Article.findOne({ _id:body.id }, { __v: 0 }, function(err, docs){
       if (err) {
         return res.status(200).json({
           err_code: 1,
@@ -223,8 +223,20 @@ router.post('/article/getArticle', async function (req, res) {
 // 修改文章接口
 router.post('/article/update', async function (req, res) {
   var body = req.body;
+  let setObj = {
+    articleType: body.articleType, // 文章类型
+    contact: body.contact, // 联系方式
+    place: body.place, // 地点
+    content: body.content, // 内容
+    imageUrl: body.imageUrl, // 图片
+    product: body.product, // 寻找、招领的物品
+    username: body.username,
+    userId: body.userId,
+    time_quantum: body.timeQuantum, // 时间段
+    last_modified_time: utils.localDate()
+  }
   try {
-    await Article.updateOne({_id: body._id}, {$set: { title: body.title }}, function(err, docs){
+    await Article.updateOne({_id: body._id}, {$set: setObj}, function(err, docs){
       if(err){
         return res.status(200).json({
           err_code: 1,
@@ -245,4 +257,31 @@ router.post('/article/update', async function (req, res) {
     })
   }
 })
+
+// 根据id删除文章
+router.post('/article/deleteById', async function (req, res) {
+  var body = req.body;
+  try {
+    await Article.remove({_id: body._id}, function(err, docs){
+      if(err){
+        return res.status(200).json({
+          err_code: 1,
+          message: '删除失败' + err
+        })
+      } else {
+        return res.status(200).json({
+          err_code: 0,
+          message: '删除成功',
+          data: {}
+        })
+      }
+    })
+  } catch (err) {
+    res.status(500).json({
+      err_code: 500,
+      message: err.message
+    })
+  }
+})
+
 module.exports = router

@@ -21,6 +21,7 @@
       <router-link to="/personal">个人中心</router-link>
       <router-link :to="{path:'/information', query:{articleType: 'found'}}">更多招领</router-link>
       <router-link :to="{path:'/information', query:{articleType: 'lose'}}">更多寻物</router-link>
+      <router-link v-if="username !== ''" to="/myArticle">我发布的</router-link>
     </div>
   </div>
 </template>

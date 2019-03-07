@@ -90,6 +90,12 @@ body{
   white-space: nowrap;
 }
 
+/* 文本溢出
+-------------------------- */
+.margin-top-10{
+  margin-top: 10px;
+}
+
 /* 引入字体
 -------------------------- */
 @font-face{
