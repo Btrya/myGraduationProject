@@ -34,7 +34,7 @@
         <Icon type="ios-information-circle"></Icon>
         <span>编辑{{articleType}}</span>
       </p>
-     <i-form class="myArticle-form" ref='myArticleForm' :model="articleData" label-position="left" :label-width="130">
+     <i-form class="myArticle-form" ref='myArticleForm' :model="articleData" :rules="ruleValidate" label-position="left" :label-width="130">
         <Form-item label="讯息类型:" prop="articleType">
           <RadioGroup v-model="articleData.articleType" type="button">
             <Radio label="招领启事"></Radio>
@@ -47,7 +47,7 @@
         <Form-item label="地点:" prop="place">
           <i-input v-model="articleData.place" placeholder="请输入找到/丢失物品时候的地点"></i-input>
         </Form-item>
-        <Form-item class="publish-timeQuantum" label="发生时间段:" prop="timeQuantum">
+        <Form-item class="publish-timeQuantum" label="发生时间段:" prop="time_quantum">
           <DatePicker v-model="articleData.time_quantum" :options="options" type="datetimerange" format="yyyy-MM-dd HH:mm" placeholder="请选择发生时间段" size="large" style="width: 60%;" @on-change="changeTimeQuantum"></DatePicker>
         </Form-item>
         <Form-item label="联系方式:" prop="contact">
@@ -63,7 +63,7 @@
         </Form-item>
       </i-form>
       <div slot="footer">
-        <Button type="info" size="large" @click="confirmEdit">编辑</Button>
+        <Button type="info" size="large" @click="validForm('myArticleForm')">编辑</Button>
         <Button size="large" @click="articleModal = false">关闭</Button>
       </div>
     </Modal>
@@ -93,6 +93,38 @@ export default {
     mavonEditor
   },
   data() {
+    const validateContact = (rule, value, callback) => {
+      if (!value[1]) {
+        callback(new Error("联系方式不能为空"))
+        return
+      }
+      if (value[0] === '手机号') {
+        if(!(/^1[34578]\d{9}$/.test(value[1]))){ 
+          callback(new Error("手机号码有误，请重填"))
+          return 
+        }
+      } else if (value[0] === '邮箱') {
+        if(!(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(value[1]))){ 
+          callback(new Error("邮箱格式有误，请重填"))
+          return 
+        }
+      }
+      callback()
+    }
+    const validateTime = (rule, value, callback) => {
+      if (!value[1]) {
+        callback(new Error("时间段异常，请重新选择"))
+        return
+      }
+      callback()
+    }
+    const validateRequired = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("此项为必填项"))
+        return
+      }
+      callback()
+    }
     return {
       userId: '', // 用户id
       articleType: '招领启事', // 选择的类型
@@ -111,7 +143,24 @@ export default {
         imageUrl: '',
         username: '',
         userId: '',
-        timeQuantum: ''
+        time_quantum: ['', '']
+      },
+      ruleValidate: {
+        product: [
+          { validator: validateRequired, trigger: "blur" }
+        ],
+        contact: [
+          { validator: validateContact, trigger: "blur" }
+        ],
+        place: [
+          { validator: validateRequired, trigger: "blur" }
+        ],
+        time_quantum: [
+          { validator: validateTime, trigger: "blur" }
+        ],
+        content: [
+          { validator: validateRequired, trigger: "blur" }
+        ]
       },
       articleModal: false,
       delModal: false,
@@ -220,11 +269,26 @@ export default {
     updateContent(val) {
       this.articleData.content = val
     },
+    // 校验表单
+    validForm(name) {
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          // this.$Message.success("提交成功!")
+          this.confirmEdit()
+        } else {
+          this.$Message.error("表单验证失败！")
+        }
+      })
+    },
     async confirmEdit() {
       const { articleData } = this
-      await update(articleData).then(res => {
+      let temp = articleData
+      temp.articleType = temp.articleType === '招领启事' ? 'found' : 'lose'
+      await update(temp).then(res => {
         if (res.data.err_code === 0) {
           this.$Message.success('编辑成功！')
+          this.articleModal = false
+          this.getArticle()
         }
       })
     }

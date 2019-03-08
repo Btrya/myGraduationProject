@@ -23,6 +23,9 @@
       <router-link :to="{path:'/information', query:{articleType: 'lose'}}">更多寻物</router-link>
       <router-link v-if="username !== ''" to="/myArticle">我发布的</router-link>
     </div>
+    <div class="navBar-search f-center">
+      <Input v-model="searchVal" search placeholder="键入物品名搜索讯息" @on-search="searchArticle"/>
+    </div>
   </div>
 </template>
 
@@ -31,7 +34,9 @@ export default {
   data() {
     return {
       username: '',
-      avatar: ''
+      avatar: '',
+      // 搜索词
+      searchVal: ''
     }
   },
   methods: {
@@ -47,6 +52,10 @@ export default {
     },
     gotoSetting() {
       this.$router.push({path: '/personal'})
+    },
+    searchArticle(val) {
+      this.$emit('getSearchVal', val)
+      this.searchVal = ''
     }
   },
   mounted() {
@@ -58,14 +67,15 @@ export default {
 <style scoped lang="less">
 .navBar {
   min-height: 100vh;
-  width: 17.75%;
+  // width: 17.75%;
   position: fixed;
-  max-width: 4.533333rem;
-  min-width: 3.146667rem;
+  max-width: 4.666667rem;
+  min-width: 4.266667rem;
   left: 0;
   top: 0;
   background-color: #fff;
   z-index: 99;
+  border-right: 1px solid #f6f6f6;
 }
 .navBar-logo {
   margin: 1.013333rem auto 0;
@@ -109,5 +119,11 @@ export default {
   a:hover {
     color: #515a61;
   }
+}
+.navBar-search{
+  padding: 0 .266667rem;
+  width: 100%;
+  position: absolute;
+  bottom: 1.066667rem;
 }
 </style>

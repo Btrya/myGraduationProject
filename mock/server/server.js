@@ -6,15 +6,8 @@ var articleRouter = require('../router/articleRouter')
 var app = express()
 var mongoose = require('../config/mongoose.js');
 // 引入七牛云配置
-console.log('更新七牛云token...')
 const qnconfig = require('../config/qiniu.js')
 var db = mongoose();
-// 定时引入七牛云配置，更新token
-setInterval(() => {
-  // 引入七牛云配置
-  console.log('更新七牛云token...')
-  const qnconfig = require('../config/qiniu.js')
-}, 7200000);
 //配置解析表单POST请求体插件
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({

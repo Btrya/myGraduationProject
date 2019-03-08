@@ -5,10 +5,7 @@
       <h1>发布</h1>
     </div>
     <div class="publish-content f-vertical-center animated fadeInLeft delay-1s">
-      <i-form class="publish-form" ref='publishForm' :model="publishFormData" label-position="left" :label-width="130">
-        <!-- <Form-item label="标题:" prop="title">
-          <i-input v-model="publishFormData.title" placeholder="请输入标题"></i-input>
-        </Form-item> -->
+      <i-form class="publish-form" ref='publishForm' :model="publishFormData" :rules="ruleValidate" label-position="left" :label-width="130">
         <Form-item label="讯息类型:" prop="articleType">
           <RadioGroup v-model="publishFormData.articleType" type="button">
             <Radio label="招领启事"></Radio>
@@ -33,17 +30,13 @@
           </div>
         </Form-item>
         <Form-item label="上传图片:" prop="imageUrl">
-          <Upload :action="domain"
-            :show-upload-list="false"
-            :before-upload="upqiniu">
-              <Button icon="ios-cloud-upload-outline">点击上传</Button>
-          </Upload>
+          <myUpload></myUpload>
         </Form-item>
         <Form-item class="publish-editor" label="描述:" prop="content">
           <mavonEditor ref="publishEditor" :content.sync="publishFormData.content" v-on:updateContent="updateContent"></mavonEditor>
         </Form-item>
         <Form-item>
-          <i-button class="personal-submit" type="primary" @click="publishArticle">发布</i-button>
+          <i-button class="personal-submit" type="primary" @click="validForm('publishForm')">发布</i-button>
         </Form-item>
       </i-form>
     </div>
@@ -52,20 +45,48 @@
 
 <script>
 import mavonEditor from "../components/mavon"
+import myUpload from "../components/upload"
 import { getToken, uploadQiNiu } from '../apis/upload.js'
 import { publish } from '../apis/article.js'
 export default {
   components: {
-    mavonEditor
+    mavonEditor,
+    myUpload
   },
   data() {
+    const validateContact = (rule, value, callback) => {
+      if (!value[1]) {
+        callback(new Error("联系方式不能为空"))
+        return
+      }
+      if (value[0] === '手机号') {
+        if(!(/^1[34578]\d{9}$/.test(value[1]))){ 
+          callback(new Error("手机号码有误，请重填"))
+          return 
+        }
+      } else if (value[0] === '邮箱') {
+        if(!(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(value[1]))){ 
+          callback(new Error("邮箱格式有误，请重填"))
+          return 
+        }
+      }
+      callback()
+    }
+    const validateTime = (rule, value, callback) => {
+      if (!value[1]) {
+        callback(new Error("时间段异常，请重新选择"))
+        return
+      }
+      callback()
+    }
+    const validateRequired = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("此项为必填项"))
+        return
+      }
+      callback()
+    }
     return {
-      imageUrl: '',
-      token: {},
-      // 七牛云的上传地址，根据自己所在地区选择，我这里是华南区
-      domain: 'https://upload-z2.qiniup.com',
-      // 这是七牛云空间的外链默认域名
-      qiniuaddr: 'cbcool.iok.la.qiniudns.com',
       publishFormData: {
         contact: ['手机号', ''],
         product: '',
@@ -76,6 +97,23 @@ export default {
         username: '',
         userId: '',
         timeQuantum: ''
+      },
+      ruleValidate: {
+        product: [
+          { validator: validateRequired, trigger: "blur" }
+        ],
+        contact: [
+          { validator: validateContact, trigger: "blur" }
+        ],
+        place: [
+          { validator: validateRequired, trigger: "blur" }
+        ],
+        timeQuantum: [
+          { validator: validateTime, trigger: "blur" }
+        ],
+        content: [
+          { validator: validateRequired, trigger: "blur" }
+        ]
       },
       // 设置不可选日期
       options: {
@@ -117,49 +155,20 @@ export default {
       this.publishFormData.contact[1] = phone
       this.$refs.publishEditor.clearValue()
     },
-    // 上传文件到七牛云
-    upqiniu (file) {
-      const that = this
-      this.beforeUpload(file)
-      const config = {
-        headers: {'Content-Type': 'multipart/form-data'}
-      }
-      let filetype = ''
-      if (file.type === 'image/png') {
-        filetype = 'png'
-      } else {
-        filetype = 'jpg'
-      }
-      // 重命名要上传的文件
-      const keyname = 'btrya' + new Date().getTime() + Math.floor(Math.random() * 100) + '.' + filetype
-      // 从后端获取上传凭证token
-      getToken().then(res => {
-        const token = res.data
-        const formdata = new FormData()
-        formdata.append('file', file)
-        formdata.append('token', token)
-        formdata.append('key', keyname)
-        uploadQiNiu(formdata).then(res1 => {
-          that.publishFormData.imageUrl = res1.key
-        })
-      })
-      return false
-    },
-    // 验证文件合法性
-    beforeUpload (file) {
-      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
-      return isJPG && isLt2M
-    },
     // 接收由子组件传过来的值，之后赋值到表单的content里
     updateContent(val) {
       this.publishFormData.content = val
+    },
+    // 校验表单
+    validForm(name) {
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          // this.$Message.success("提交成功!")
+          this.publishArticle()
+        } else {
+          this.$Message.error("表单验证失败！")
+        }
+      })
     },
     // 发布
     async publishArticle() {

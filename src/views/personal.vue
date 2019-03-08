@@ -8,7 +8,7 @@
       <img mode="widthFix" src="../images/icon-down.png">
     </div>
     <div class="personal-content f-vertical-center">
-      <i-form class="personal-form" ref='settingForm' :model="settingFormData" label-position="left" :label-width="130">
+      <i-form class="personal-form" ref='settingForm' :model="settingFormData" :rules="ruleValidate" label-position="left" :label-width="130">
         <Form-item label="头像:" prop="avatar">
           <img mode="widthFix" :src="settingFormData.avatar">
         </Form-item>
@@ -29,7 +29,7 @@
           <i-input type="password" v-model="settingFormData.passagain" placeholder="请再次输入新密码"></i-input>
         </Form-item>
         <Form-item>
-          <i-button class="personal-submit" type="primary" @click="updateUser">修改</i-button>
+          <i-button class="personal-submit" type="primary" @click="validForm('settingForm')">修改</i-button>
           <i-button class="personal-reset" @click="initUser">重置</i-button>
         </Form-item>
       </i-form>
@@ -41,6 +41,42 @@
 import { updateUser } from '../apis/login.js'
 export default {
   data() {
+    const validateUsername = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("用户名不能为空"))
+        return
+      }
+      var ranges = ['\ud83c[\udf00-\udfff]', '\ud83d[\udc00-\ude4f]', '\ud83d[\ude80-\udeff]']
+      if (new RegExp(ranges.join('|'), 'g').test(value)) {
+        callback(new Error("不可加入表情"))
+        return
+      }
+      callback()
+    }
+    const validatePassword = (rule, value, callback) => {
+      if (this.settingFormData.newPassword) {
+        callback(new Error("请输入旧密码"))
+        return
+      }
+      callback()
+    }
+    const validateNewPass = (rule, value, callback) => {
+      if (value === this.settingFormData.password) {
+        callback(new Error("新旧密码不能相同"))
+        return
+      }
+      callback()
+    }
+    const validatePassAgain = (rule, value, callback) => {
+      if (!this.settingFormData.newPassword) {
+        callback()
+      }
+      if (value !== this.settingFormData.newPassword) {
+        callback(new Error("两次密码不相同"))
+        return
+      }
+      callback()
+    }
     return {
       showArrow: true,
       settingFormData: {
@@ -50,6 +86,20 @@ export default {
         password: '',
         newPassword: '',
         passagain: ''
+      },
+      ruleValidate: {
+        username: [
+          { validator: validateUsername, trigger: "blur" }
+        ],
+        password: [
+          { validator: validatePassword, trigger: "blur" }
+        ],
+        newPassword: [
+          { validator: validateNewPass, trigger: "blur" }
+        ],
+        passagain: [
+          { validator: validatePassAgain, trigger: "blur" }
+        ] 
       }
     }
   },
@@ -66,6 +116,17 @@ export default {
       this.settingFormData.password = '' 
       this.settingFormData.newPassword = '' 
       this.settingFormData.passagain = ''
+    },
+    // 校验表单
+    validForm(name) {
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          // this.$Message.success("提交成功!")
+          this.updateUser()
+        } else {
+          this.$Message.error("表单验证失败！")
+        }
+      })
     },
     async updateUser(){
       const { settingFormData } = this
