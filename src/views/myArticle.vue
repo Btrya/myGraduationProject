@@ -29,7 +29,7 @@
       </div>
     </div>
     <!-- 编辑弹出框 -->
-    <Modal v-model="articleModal" width="70%">
+    <Modal v-model="articleModal" width="70%" :styles="{top: '20px'}">
       <p slot="header" style="color:#2b85e4;text-align:center">
         <Icon type="ios-information-circle"></Icon>
         <span>编辑{{articleType}}</span>

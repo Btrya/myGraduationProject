@@ -10,7 +10,8 @@
     <div class="personal-content f-vertical-center">
       <i-form class="personal-form" ref='settingForm' :model="settingFormData" :rules="ruleValidate" label-position="left" :label-width="130">
         <Form-item label="头像:" prop="avatar">
-          <img mode="widthFix" :src="settingFormData.avatar">
+          <myUpload :oldPic="settingFormData.avatar" :isCircular="true" v-on:getImageUrl="getImageUrl"></myUpload>
+          <!-- <img mode="widthFix" :src="settingFormData.avatar"> -->
         </Form-item>
         <Form-item label="用户名:" prop="username">
           <i-input v-model="settingFormData.username" placeholder="请输入要修改的用户名"></i-input>
@@ -38,8 +39,12 @@
 </template>
 
 <script>
+import myUpload from "../components/upload"
 import { updateUser } from '../apis/login.js'
 export default {
+  components: {
+    myUpload
+  },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (value === "") {
@@ -61,9 +66,11 @@ export default {
       callback()
     }
     const validateNewPass = (rule, value, callback) => {
-      if (value === this.settingFormData.password) {
-        callback(new Error("新旧密码不能相同"))
-        return
+      if (this.settingFormData.password) {
+        if (value === this.settingFormData.password) {
+          callback(new Error("新旧密码不能相同"))
+          return
+        }
       }
       callback()
     }
@@ -139,6 +146,10 @@ export default {
         }
         this.$Message.error(res.data.message)
       })
+    },
+    // 接收上传子组件传过来的值
+    getImageUrl(val) {
+      this.settingFormData.avatar = val
     }
   },
   mounted() {

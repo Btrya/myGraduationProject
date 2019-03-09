@@ -71,7 +71,7 @@ export default {
     margin: .266667rem .4rem;
     width: 1.733333rem;
     height: auto;
-    background-color: cornflowerblue;
+    background-color: #f6f6f6;
   }
   p{
     margin-left: 8px;

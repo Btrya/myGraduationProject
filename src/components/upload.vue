@@ -1,23 +1,31 @@
 <template>
   <div class="myUpload">
-    <div v-if="imageUrl === ''">
+    <div v-if="uploadStatus === 0">
       <Upload :action="domain"
         :show-upload-list="false"
         :before-upload="upqiniu">
-        <div class="myUpload-nopic f-center">
+        <div class="myUpload-nopic f-center" :class="{ myUploadCir: isCircular }">
           <Icon type="ios-camera"></Icon>
         </div>
       </Upload>
     </div>
-    <div v-else class="myUpload-cover" @mouseenter="showIcon = true" @mouseleave="showIcon = false">
-      <img :src="imageUrl"/>
-      <div v-show="showIcon" class="icon-cover f-center f-vertical">
+    <!-- 进度条 -->
+    <div v-else-if="uploadStatus === 1" class="myUpload-progress f-center" :class="{ myUploadCir: isCircular }">
+      <Progress :percent="progressPer" status="active" hide-info :stroke-width="15"/>
+    </div>
+    <div v-else-if="uploadStatus === 2" class="myUpload-cover" @mouseenter="showIcon = true" @mouseleave="showIcon = false">
+      <img :src="imageUrl" :class="{ myUploadCir: isCircular }"/>
+      <div v-show="showIcon" class="icon-cover f-center f-vertical" :class="{ myUploadCir: isCircular }">
         <Icon type="ios-eye-outline" @click.native="handleView"></Icon>
         <Icon type="ios-trash-outline" @click.native="handleRemove"></Icon>
       </div>
     </div>
-    <Modal title="查看大图" v-model="showModal" style="width: 500px;">
+    <!-- 查看大图弹出框 -->
+    <Modal title="查看大图" v-model="showModal" :styles="{top: '20px'}">
       <img v-if="showModal" class="myUpload-modal-img" mode="widthFix" :src="imageUrl">
+      <div slot="footer">
+        <Button type="primary" size="large" long @click="showModal= false">关闭</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -25,6 +33,16 @@
 <script>
 import { getToken, uploadQiNiu } from '../apis/upload.js'
 export default {
+  props: {
+    isCircular: {
+      type: Boolean,
+      default: false
+    },
+    oldPic: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       imageUrl: '',
@@ -34,12 +52,15 @@ export default {
       // 这是七牛云空间的外链默认域名
       qiniuaddr: 'btrya.luozhiwen.com.qiniudns.com',
       showIcon: false,
-      showModal: false
+      showModal: false,
+      uploadStatus: 0,
+      progressPer: 0
     }
   },
   methods: {
     // 上传文件到七牛云
     upqiniu (file) {
+      this.progressInc()
       const that = this
       this.beforeUpload(file)
       const config = {
@@ -62,6 +83,9 @@ export default {
         formdata.append('key', keyname)
         uploadQiNiu(formdata).then(res1 => {
           that.imageUrl = 'http://btrya.luozhiwen.com/' + res1.data.key
+          that.uploadStatus = 2 // 显示图片
+          that.showIcon = false
+          that.$emit('getImageUrl', that.imageUrl)
         })
       })
       return false
@@ -81,10 +105,38 @@ export default {
     // 点击删除文件
     handleRemove() {
       this.imageUrl = ''
+      this.uploadStatus = 0 // 状态重置
+      this.$emit('getImageUrl', this.imageUrl)
     },
     // 点击查看大图
     handleView() {
       this.showModal = true
+    },
+    // 进度条增长
+    progressInc() {
+      this.uploadStatus = 1 // 显示进度条
+      const that = this
+      let timer = setInterval(() => {
+        if (that.progressPer <= 80) {
+          that.progressPer += 2
+        }
+        if (that.uploadStatus !== 1) {
+          that.progressPer = 0
+          clearInterval(timer)
+        } 
+      }, 400)
+    }
+  },
+  mounted() {
+
+  },
+  watch: {
+    // 监听value的变化，并且将变化后的值传给父组件
+    oldPic(val) {
+      if (val !== '') {
+        this.imageUrl = val
+        this.uploadStatus = 2
+      }
     }
   }
 };
@@ -95,13 +147,25 @@ export default {
   width: 100% !important;
   height: auto !important;
 }
+.myUploadCir{
+  border-radius: 50%;
+}
 .myUpload{
-  width: 4rem;
-  height: 4rem;
+  width: 3.466667rem;
+  height: 3.466667rem;
+  .myUpload-progress{
+    width: 3.466667rem;
+    height: 3.466667rem;
+    border: 1px dashed #999;
+    .ivu-progress-outer{
+      width: 85%;
+      margin-left: .333rem;
+    }
+  }
   .myUpload-nopic{
     cursor: pointer;
-    width: 4rem;
-    height: 4rem;
+    width: 3.466667rem;
+    height: 3.466667rem;
     border: 1px dashed #999;
     box-shadow: 0 1px 1px rgba(0,0,0,.2);
     .ivu-icon{
@@ -115,12 +179,13 @@ export default {
   }
   .myUpload-cover{
     img{
-      width: 4rem;
-      height: 4rem;
+      border: 1px solid #999;
+      width: 3.466667rem;
+      height: 3.466667rem;
     }
     .icon-cover{
-      width: 4rem;
-      height: 4rem;
+      width: 3.466667rem;
+      height: 3.466667rem;
       position: absolute;
       top: 0;
       left: 0;

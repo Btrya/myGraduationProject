@@ -75,7 +75,7 @@
       <img v-show="!searchBtn" mode="widthFix" src="../images/icon-right.png">
     </div>
     <!-- 搜索半圆2 -->
-    <div v-show="!showDrawer" class="drawer-searchBtn2" @mouseenter="searchBtn = false" @mouseleave="searchBtn = true" @click="showDrawer = true">
+    <div v-show="!showDrawer" class="drawer-searchBtn2" @mouseenter="searchBtn = false" @mouseleave="searchBtn = true" @click="openDrawer">
       <img v-show="searchBtn" mode="widthFix" src="../images/icon-search.png">
       <img v-show="!searchBtn" mode="widthFix" src="../images/icon-left.png">
     </div>
@@ -190,6 +190,10 @@ export default {
       let btn = document.getElementsByClassName('drawer-searchBtn')[0]
       let father = document.getElementsByClassName('ivu-drawer')[0]
       father.appendChild(btn)
+    },
+    openDrawer() {
+      this.showDrawer = true
+      this.searchArticle()
     }
   },
   mounted() {

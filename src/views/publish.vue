@@ -30,7 +30,7 @@
           </div>
         </Form-item>
         <Form-item label="上传图片:" prop="imageUrl">
-          <myUpload></myUpload>
+          <myUpload v-on:getImageUrl="getImageUrl"></myUpload>
         </Form-item>
         <Form-item class="publish-editor" label="描述:" prop="content">
           <mavonEditor ref="publishEditor" :content.sync="publishFormData.content" v-on:updateContent="updateContent"></mavonEditor>
@@ -109,7 +109,7 @@ export default {
           { validator: validateRequired, trigger: "blur" }
         ],
         timeQuantum: [
-          { validator: validateTime, trigger: "blur" }
+          { validator: validateTime, trigger: "change" }
         ],
         content: [
           { validator: validateRequired, trigger: "blur" }
@@ -159,6 +159,10 @@ export default {
     updateContent(val) {
       this.publishFormData.content = val
     },
+    // 接收上传子组件传过来的值
+    getImageUrl(val) {
+      this.publishFormData.imageUrl = val
+    },
     // 校验表单
     validForm(name) {
       this.$refs[name].validate(valid => {
@@ -179,6 +183,7 @@ export default {
         if (res.data.err_code === 0) {
           this.$Message.success('发布成功！')
           this.initUser()
+          this.$router.push('/')
           return
         }
         this.$Message.error(res.data.message)
