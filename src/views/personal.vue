@@ -142,6 +142,7 @@ export default {
         if (res.data.err_code === 0) {
           this.$store.dispatch('saveUser', res.data.data)
           this.$Message.success(res.data.message)
+          this.$router.replace('/')
           return
         }
         this.$Message.error(res.data.message)

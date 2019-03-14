@@ -50,7 +50,7 @@ export default {
       // 七牛云的上传地址，根据自己所在地区选择，我这里是华南区
       domain: 'https://upload-z2.qiniup.com',
       // 这是七牛云空间的外链默认域名
-      qiniuaddr: 'btrya.luozhiwen.com.qiniudns.com',
+      qiniuaddr: 'img.btrya.xyz.qiniudns.com',
       showIcon: false,
       showModal: false,
       uploadStatus: 0,
@@ -82,7 +82,7 @@ export default {
         formdata.append('token', token)
         formdata.append('key', keyname)
         uploadQiNiu(formdata).then(res1 => {
-          that.imageUrl = 'http://btrya.luozhiwen.com/' + res1.data.key
+          that.imageUrl = 'http://img.btrya.xyz/' + res1.data.key
           that.uploadStatus = 2 // 显示图片
           that.showIcon = false
           that.$emit('getImageUrl', that.imageUrl)

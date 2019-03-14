@@ -72,14 +72,19 @@ export default {
     },
     // 登录
     async login() {
+      // 获取表单数据
       const { loginFormData } = this
+      // 提交到后台
       await login(loginFormData).then(res => {
+        // 后台返回成功
         if (res.data.err_code === 0) {
+          // 保存登录态
           this.$store.dispatch('saveUser', res.data.data)
           this.$Message.success("登录成功!")
           this.$router.push({path: '/'})
           return
         }
+        // 失败提示
         this.$Message.error(res.data.message)
       })
     }

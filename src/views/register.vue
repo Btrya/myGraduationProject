@@ -105,14 +105,19 @@ export default {
     },
     // 注册
     async register() {
+      // 获取表单数据
       const { registerFormData } = this
+      // 发送到后台
       await register(registerFormData).then(res => {
+        // 后台成功返回数据
         if (res.data.err_code === 0) {
+          // 保存状态
           this.$store.dispatch('saveUser', res.data.data)
           this.$Message.success("注册成功!")
           this.$router.push({path: '/'})
           return
         }
+        // 失败提示
         this.$Message.error(res.data.message)
       })
     }

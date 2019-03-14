@@ -130,15 +130,16 @@ export default {
     loseList
   },
   methods: {
+    // 获取首页信息
     async getIndexArticle() {
-      const that = this;
+      const that = this
       await getIndexArticle().then(res => {
         if (res.data.err_code === 0) {
-          let { loseData, foundData } = res.data.data;
-          that.foundData = foundData;
-          that.loseData = loseData;
+          let { loseData, foundData } = res.data.data
+          that.foundData = foundData
+          that.loseData = loseData
         }
-      });
+      })
     },
     // 点击获取文章id，然后根据id去查找对应的文章
     getArticle(id) {
@@ -160,10 +161,13 @@ export default {
     },
     // 搜索
     async searchArticle() {
+      // 获取表单数据
       const { articleType, pageNum, pageSize, product } = this.searchData
       const temp = articleType === '招领启事' ? 'found' : 'lose'
       const formdata = { articleType: temp, pageNum, pageSize, product }
+      // 传入后台
       await getArticle(formdata).then(res => {
+        // 返回成功
         if (res.data.err_code === 0) {
           const { data, pageNum, pageSize, total } = res.data.data
           this.searchData.total = total
