@@ -19,7 +19,7 @@ router.get('/', function (req, res) {
   res.send('OJBK')
 })
 
-router.post('/register', async function (req, res) {
+router.post('/api/register', async function (req, res) {
   var body = req.body;
   try {
     if (await User.findOne({
@@ -95,7 +95,7 @@ router.post('/register', async function (req, res) {
   }
 })
 
-router.post('/login', async function (req, res) {
+router.post('/api/login', async function (req, res) {
   var body = req.body
   //制定密钥
   const secret = 'hello world'
@@ -115,8 +115,8 @@ router.post('/login', async function (req, res) {
     }, function (err, docs) {
       if (err) {
         return res.status(200).json({
-          err_code: 4,
-          message: '服务器错误：' + err,
+          err_code: 1,
+          message: '登录失败，登录失败，请检查用户名和密码是否正确',
         })
       }
       if (docs) {
@@ -148,7 +148,7 @@ router.post('/login', async function (req, res) {
   }
 })
 
-router.post('/updateUser', async function (req, res) {
+router.post('/api/updateUser', async function (req, res) {
   var body = req.body
   let checkObj = {
     _id: body._id

@@ -35,7 +35,7 @@ app.use(articleRouter)
 app.listen(3000, function () {
     console.log('open sever successful, listen in port: 3000')
 })
-app.get('/getToken', (req, res, next) => {
+app.get('/api/getToken', (req, res, next) => {
     // console.log(qnconfig.uploadToken)
     res.status(200).send(qnconfig.uploadToken)
 })
