@@ -19,7 +19,7 @@ router.get('/', function (req, res) {
   res.send('OJBK')
 })
 
-router.post('/api/register', async function (req, res) {
+router.post('/register', async function (req, res) {
   var body = req.body;
   try {
     if (await User.findOne({
@@ -95,7 +95,7 @@ router.post('/api/register', async function (req, res) {
   }
 })
 
-router.post('/api/login', async function (req, res) {
+router.post('/login', async function (req, res) {
   var body = req.body
   //制定密钥
   const secret = 'hello world'
@@ -148,7 +148,7 @@ router.post('/api/login', async function (req, res) {
   }
 })
 
-router.post('/api/updateUser', async function (req, res) {
+router.post('/updateUser', async function (req, res) {
   var body = req.body
   let checkObj = {
     _id: body._id

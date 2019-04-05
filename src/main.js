@@ -28,6 +28,13 @@ const router = new VueRouter(RouterConfig);
 router.beforeEach((to, from, next) => {
     iView.LoadingBar.start();
     Util.title(to.meta.title);
+    if (to.meta.needLogin) {
+      if (!localStorage.getItem('lfuser')){
+        next({
+          path: '/login'
+        })
+      }
+    }
     next();
 });
 

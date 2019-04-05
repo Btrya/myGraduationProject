@@ -29,7 +29,10 @@ export default {
     carouselImgs: {
       type: Array
     },
-    list: Array
+    list: {
+      type: Array,
+      default: []
+    }
   },
   data() {
     return {

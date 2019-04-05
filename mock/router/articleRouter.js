@@ -17,7 +17,7 @@ router.all('*', function (req, res, next) {
 });
 
 // 发布文章接口
-router.post('/api/article/publish', async function (req, res) {
+router.post('/article/publish', async function (req, res) {
   var body = req.body;
   if (!body.imageUrl) {
     body.imageUrl = ''
@@ -75,7 +75,7 @@ router.post('/api/article/publish', async function (req, res) {
 })
 
 // 删除文章接口
-router.get('/api/article/delete', async function (req, res) {
+router.get('/article/delete', async function (req, res) {
   var body = req.query;
   try {
     await Article.deleteOne({_id: body._id},function(err, docs){
@@ -101,7 +101,7 @@ router.get('/api/article/delete', async function (req, res) {
 })
 
 // 首页获取文章列表(各前10条)
-router.get('/api/article/getIndexArticle', async function (req, res) {
+router.get('/article/getIndexArticle', async function (req, res) {
   var body = req.query;
   let resData = {}
   try {
@@ -147,7 +147,7 @@ router.get('/api/article/getIndexArticle', async function (req, res) {
 })
 
 // 根据文章id查询对应文章
-router.post('/api/article/getArticleById', async function(req, res) {
+router.post('/article/getArticleById', async function(req, res) {
   var body = req.body
   try {
     await Article.findOne({ _id:body.id }, { __v: 0 }, function(err, docs){
@@ -173,7 +173,7 @@ router.post('/api/article/getArticleById', async function(req, res) {
 })
 
 // 根据条件获取文章
-router.post('/api/article/getArticle', async function (req, res) {
+router.post('/article/getArticle', async function (req, res) {
   var body = req.body;
   let checkObj = {articleType: body.articleType}
   if (body.userId){
@@ -223,7 +223,7 @@ router.post('/api/article/getArticle', async function (req, res) {
 })
 
 // 修改文章接口
-router.post('/api/article/update', async function (req, res) {
+router.post('/article/update', async function (req, res) {
   var body = req.body;
   let setObj = {
     articleType: body.articleType, // 文章类型
@@ -234,8 +234,9 @@ router.post('/api/article/update', async function (req, res) {
     product: body.product, // 寻找、招领的物品
     username: body.username,
     userId: body.userId,
-    time_quantum: body.time_quantum, // 时间段
-    last_modified_time: utils.localDate()
+    time_quantum: body.timeQuantum, // 时间段
+    last_modified_time: utils.localDate(),
+    created_time: body.created_time
   }
   try {
     await Article.findOneAndUpdate({_id: body._id}, {$set: setObj}, function(err, docs){
@@ -261,7 +262,7 @@ router.post('/api/article/update', async function (req, res) {
 })
 
 // 根据id删除文章
-router.post('/api/article/deleteById', async function (req, res) {
+router.post('/article/deleteById', async function (req, res) {
   var body = req.body;
   try {
     await Article.deleteOne({_id: body._id}, function(err, docs){

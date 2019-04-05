@@ -1,2 +1,2 @@
-const baseUrl = 'http://www.btrya.xyz:3000/api'
+const baseUrl = 'http://localhost:8081/api'
 export default baseUrl

@@ -23,14 +23,16 @@ const routers = [
     {
         path: '/publish',
         meta: {
-            title: '发布'
+            title: '发布',
+            needLogin: true
         },
         component: (resolve) => require(['./views/publish.vue'], resolve)
     },
     {
       path: '/personal',
       meta: {
-          title: '个人中心'
+          title: '个人中心',
+          needLogin: true
       },
       component: (resolve) => require(['./views/personal.vue'], resolve)
     },
@@ -44,9 +46,17 @@ const routers = [
     {
       path: '/myArticle',
       meta: {
-          title: '我发布的'
+          title: '我发布的',
+          needLogin: true
       },
       component: (resolve) => require(['./views/myArticle.vue'], resolve)
+    },
+    {
+      path: '/backend/login',
+      meta: {
+          title: '后台登录页'
+      },
+      component: (resolve) => require(['./views/backend/login.vue'], resolve)
     },
     {
       path: '/404',

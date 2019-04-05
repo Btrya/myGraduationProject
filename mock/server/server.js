@@ -2,6 +2,7 @@ var express = require('express')
 var bodyParser = require('body-parser')
 var userRouter = require('../router/userRouter')
 var articleRouter = require('../router/articleRouter')
+var adminRouter = require('../router/adminRouter')
 
 var app = express()
 var mongoose = require('../config/mongoose.js');
@@ -18,6 +19,7 @@ app.use(bodyParser.json())
 //引入路由
 app.use(userRouter)
 app.use(articleRouter)
+app.use(adminRouter)
 
 // //跨域头
 // app.all('*',function (req, res, next) {
@@ -35,7 +37,7 @@ app.use(articleRouter)
 app.listen(3000, function () {
     console.log('open sever successful, listen in port: 3000')
 })
-app.get('/api/getToken', (req, res, next) => {
+app.get('/getToken', (req, res, next) => {
     // console.log(qnconfig.uploadToken)
     res.status(200).send(qnconfig.uploadToken)
 })
